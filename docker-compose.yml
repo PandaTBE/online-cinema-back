@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=online-cinema
+      - POSTGRES_PASSWORD=adasdaQadsd123a
+      - POSTGRES_DB=online-cinema
+    volumes:
+      - ./persistentdata/postgres:/var/lib/postgresql/data
+    ports:
+      - '5555:5432'
