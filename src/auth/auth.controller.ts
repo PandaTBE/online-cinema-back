@@ -7,7 +7,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { User } from '@prisma/client';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
+import { ITokenPair } from './auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -15,15 +16,19 @@ export class AuthController {
 
     @UsePipes(new ValidationPipe())
     @Post('login')
-    async login(@Body() dto: AuthDto) {
+    async login(@Body() dto: AuthDto): Promise<ITokenPair> {
         return this.authService.login(dto);
     }
 
     @UsePipes(new ValidationPipe())
+    @Post('refresh-token')
+    async refreshToken(@Body() dto: RefreshTokenDto) {
+        return this.authService.refreshToken(dto);
+    }
+
+    @UsePipes(new ValidationPipe())
     @Post('register')
-    async register(
-        @Body() dto: AuthDto,
-    ): Promise<{ accessToken: string; refreshToken: string }> {
+    async register(@Body() dto: AuthDto): Promise<ITokenPair> {
         return this.authService.register(dto);
     }
 }

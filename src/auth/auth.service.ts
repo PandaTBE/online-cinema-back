@@ -8,6 +8,8 @@ import { AuthDto } from './dto/auth.dto';
 import { hash, verify } from 'argon2';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
+import { ITokenPair } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async login(dto: AuthDto) {
+    async login(dto: AuthDto): Promise<ITokenPair> {
         const user: User | null = await this.prisma.user.findUnique({
             where: {
                 email: dto.email,
@@ -32,9 +34,19 @@ export class AuthService {
         return this.generateTokens({ userId: user.id });
     }
 
-    async register(
-        dto: AuthDto,
-    ): Promise<{ accessToken: string; refreshToken: string }> {
+    async refreshToken(dto: RefreshTokenDto): Promise<ITokenPair> {
+        const { userId } = await this.jwtService.verifyAsync<{
+            userId: number;
+        }>(dto.refreshToken);
+
+        const user = await this.prisma.user.findUnique({where: {id: userId}})
+
+        if (!user) throw new UnauthorizedException("Ошибка авторизации")
+
+        return this.generateTokens({ userId });
+    }
+
+    async register(dto: AuthDto): Promise<ITokenPair> {
         const isUserExist = await this.prisma.user.findUnique({
             where: {
                 email: dto.email,
@@ -57,7 +69,7 @@ export class AuthService {
         return this.generateTokens({ userId: user.id });
     }
 
-    async generateTokens(payload: { userId: number }) {
+    async generateTokens(payload: { userId: number }): Promise<ITokenPair> {
         const accessToken = await this.jwtService.signAsync(payload, {
             expiresIn: '1h',
         });
