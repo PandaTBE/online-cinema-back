@@ -11,17 +11,19 @@ import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly AuthService: AuthService) {}
+    constructor(private readonly authService: AuthService) {}
 
     @UsePipes(new ValidationPipe())
     @Post('login')
     async login(@Body() dto: AuthDto) {
-        return this.AuthService.login(dto);
+        return this.authService.login(dto);
     }
 
     @UsePipes(new ValidationPipe())
     @Post('register')
-    async register(@Body() dto: AuthDto): Promise<User> {
-        return this.AuthService.register(dto);
+    async register(
+        @Body() dto: AuthDto,
+    ): Promise<{ accessToken: string; refreshToken: string }> {
+        return this.authService.register(dto);
     }
 }
