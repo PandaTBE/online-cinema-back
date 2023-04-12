@@ -4,10 +4,8 @@ services:
   postgres:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_USER=online-cinema
-      - POSTGRES_PASSWORD=adasdaQadsd123a
-      - POSTGRES_DB=online-cinema
+    env_file:
+      - ./pg_env
     volumes:
       - ./persistentdata/postgres:/var/lib/postgresql/data
     ports:
