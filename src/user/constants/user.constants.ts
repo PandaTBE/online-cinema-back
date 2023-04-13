@@ -1,4 +1,3 @@
-
 export const USER_FIELDS = {
     id: true,
     createdAt: true,
@@ -7,4 +6,5 @@ export const USER_FIELDS = {
     email: true,
     isAdmin: true,
     favorites: true,
+    roles: true,
 };

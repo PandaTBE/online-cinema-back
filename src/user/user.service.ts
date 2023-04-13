@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { USER_FIELDS } from './user.constants';
+import { USER_FIELDS } from './constants/user.constants';
 
 @Injectable()
 export class UserService {
