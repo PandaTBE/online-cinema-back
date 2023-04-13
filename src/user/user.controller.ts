@@ -9,6 +9,12 @@ import { AdminUpdateUserDto, UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @Auth('admin')
+    @Get()
+    async getUsers() {
+        return [];
+    }
+
     @Auth()
     @Get('profile')
     async getProfile(

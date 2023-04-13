@@ -39,9 +39,11 @@ export class AuthService {
             userId: number;
         }>(dto.refreshToken);
 
-        const user = await this.prisma.user.findUnique({where: {id: userId}})
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+        });
 
-        if (!user) throw new UnauthorizedException("Ошибка авторизации")
+        if (!user) throw new UnauthorizedException('Ошибка авторизации');
 
         return this.generateTokens({ userId });
     }

@@ -13,7 +13,8 @@ export class AdminGuard implements CanActivate {
         const request = context.switchToHttp().getRequest<{ user: User }>();
         const user = request.user;
 
-        if (!user.isAdmin) throw new UnauthorizedException('Отказано в доступе');
+        if (!user.isAdmin)
+            throw new UnauthorizedException('Отказано в доступе');
         return user.isAdmin;
     }
 }
