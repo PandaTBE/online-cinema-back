@@ -21,3 +21,14 @@ model User {
     roles     String[] @default([])
     favorites Int[]    @default([])
 }
+
+model Genre {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    name        String
+    slug        String @unique
+    description String
+    icon        String
+}
