@@ -25,9 +25,6 @@ export class UserService {
         return user;
     }
 
-    /**
-     * Обновление профиля пользователя (не админа)
-     */
     async updateProfile(
         args: IUpdateProfileArgs,
     ): Promise<Omit<User, 'password'>> {
@@ -65,6 +62,24 @@ export class UserService {
         });
 
         return updatedUser;
+    }
+
+    async getUsers() {
+        const users = await this.prisma.user.findMany();
+        return users;
+    }
+
+    async deleteUser(userId: number) {
+        try {
+            const deletedUser = await this.prisma.user.delete({
+                where: {
+                    id: userId,
+                },
+            });
+            return deletedUser;
+        } catch (error) {
+            throw new BadRequestException('При удалении возникла ошибка');
+        }
     }
 
     private isAdminUpdateDto(

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { User as UserModel } from '@prisma/client';
 import { UserService } from './user.service';
 import { Auth } from 'src/auth/decorators/auth.decorator';
@@ -12,7 +12,7 @@ export class UserController {
     @Auth('admin')
     @Get()
     async getUsers() {
-        return [];
+        return this.userService.getUsers();
     }
 
     @Auth()
@@ -44,5 +44,11 @@ export class UserController {
             user,
             dto,
         });
+    }
+
+    @Auth('admin')
+    @Delete(':userId')
+    async deleteUser(@Param('userId') userId: string) {
+        return this.userService.deleteUser(Number(userId));
     }
 }
