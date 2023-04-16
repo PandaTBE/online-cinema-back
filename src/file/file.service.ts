@@ -13,7 +13,7 @@ export class FileService {
         await ensureDir(uploadFolder);
 
         const result: IFileResponse[] = await Promise.all(
-            files.map(async (file) => {
+            files?.map(async (file) => {
                 await writeFile(
                     `${uploadFolder}/${file.originalname}`,
                     file.buffer,

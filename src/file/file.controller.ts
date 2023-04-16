@@ -20,6 +20,8 @@ export class FileController {
         @UploadedFiles() files: Express.Multer.File[],
         @Query('folder') folder?: string,
     ) {
+        console.log(files, folder);
+
         return this.fileService.uploadFiles(files, folder);
     }
 }
