@@ -6,4 +6,5 @@ export const USER_FIELDS = {
     email: true,
     isAdmin: true,
     roles: true,
+    favorites: true,
 };

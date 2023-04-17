@@ -10,6 +10,7 @@ import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { ITokenPair } from './auth.interface';
+import { UserWithFavorites } from 'src/user/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -85,7 +86,7 @@ export class AuthService {
         };
     }
 
-    async validateUser(userId: number): Promise<User> {
+    async validateUser(userId: number): Promise<UserWithFavorites> {
         return this.prisma.user.findUnique({
             where: { id: userId },
             include: { favorites: true },

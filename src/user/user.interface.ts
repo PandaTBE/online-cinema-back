@@ -1,7 +1,8 @@
 import { User } from '@prisma/client';
 import { AdminUpdateUserDto, UpdateUserDto } from './dto/update-user.dto';
+import { Prisma } from '@prisma/client';
 
-export type TUserFields = keyof User;
+export type TUserFields = keyof UserWithFavorites;
 
 export interface IUpdateProfileArgs {
     /**
@@ -18,3 +19,11 @@ export interface IUpdateProfileArgs {
      */
     userId?: number;
 }
+
+// 1: Define a type that includes the relation to `Post`
+const userWithFavorites = Prisma.validator<Prisma.UserArgs>()({
+    include: { favorites: true },
+});
+
+// 3: This type will include a user and all their posts
+export type UserWithFavorites = Prisma.UserGetPayload<typeof userWithFavorites>;
