@@ -12,8 +12,33 @@ import { UpdateGenreDto } from './dto/update-genre.dto';
 export class GenreService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async getAllGenres() {
-        const genres = await this.prisma.genre.findMany();
+    async getAllGenres(searchTerm?: string) {
+        const options = {};
+
+        if (searchTerm) {
+            options['OR'] = [
+                {
+                    name: {
+                        contains: searchTerm,
+                    },
+                },
+                {
+                    slug: {
+                        contains: searchTerm,
+                    },
+                },
+                {
+                    description: {
+                        contains: searchTerm,
+                    },
+                },
+            ];
+        }
+        console.log(options);
+
+        const genres = await this.prisma.genre.findMany({
+            where: options,
+        });
         return genres;
     }
 
@@ -86,11 +111,11 @@ export class GenreService {
 
     async deleteGenreById(id: number) {
         try {
-            const genre = await this.prisma.genre.delete({
+            const deletedGenre = await this.prisma.genre.delete({
                 where: { id },
             });
 
-            return genre;
+            return deletedGenre;
         } catch (error) {
             throw new BadRequestException('При удалении возникла ошибка');
         }

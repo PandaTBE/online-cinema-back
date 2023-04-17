@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
@@ -19,8 +20,8 @@ export class GenreController {
     constructor(private readonly genreService: GenreService) {}
 
     @Get()
-    async getAllGenre() {
-        return this.genreService.getAllGenres();
+    async getAllGenre(@Query('search-term') searchTerm?: string) {
+        return this.genreService.getAllGenres(searchTerm.toLowerCase());
     }
 
     @Get('by-slug/:slug')

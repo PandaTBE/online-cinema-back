@@ -32,3 +32,13 @@ model Genre {
     description String
     icon        String
 }
+
+model Actor {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    name  String
+    slug  String @unique
+    photo String
+}
