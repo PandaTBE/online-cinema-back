@@ -77,6 +77,6 @@ model MovieParameters {
     year     Int
     duration Int
     country  String
-    movie    Movie  @relation(fields: [movieId], references: [id])
+    movie    Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
     movieId  Int    @unique @map("movie_id")
 }

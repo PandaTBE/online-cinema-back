@@ -1,5 +1,21 @@
-import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator';
+import {
+    IsArray,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsString,
+} from 'class-validator';
 
+export class MovieParameters {
+    @IsNumber({}, { message: 'Поле year должно быть числом' })
+    year: number;
+
+    @IsNumber({}, { message: 'Поле duration должно быть числом' })
+    duration: number;
+
+    @IsString({ message: 'Поле country должно быть строкой' })
+    country: string;
+}
 export class CreateMovieDto {
     @IsNotEmpty()
     @IsString({ message: 'Поле slug должно быть строкой' })
@@ -20,15 +36,12 @@ export class CreateMovieDto {
 
     @IsObject({ message: 'Поле parameters должно быть объектом' })
     parameters: MovieParameters;
-}
 
-export class MovieParameters {
-    @IsNumber({}, { message: 'Поле year должно быть числом' })
-    year: number;
+    @IsArray()
+    @IsNumber({}, { each: true })
+    actors: number[];
 
-    @IsNumber({}, { message: 'Поле duration должно быть числом' })
-    duration: number;
-
-    @IsString({ message: 'Поле country должно быть строкой' })
-    country;
+    @IsArray()
+    @IsNumber({}, { each: true })
+    genres: number[];
 }
