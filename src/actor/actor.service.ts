@@ -30,6 +30,9 @@ export class ActorService {
         }
         const actors = await this.prisma.actor.findMany({
             where: options,
+            include: {
+                movies: true,
+            },
         });
 
         return actors;
