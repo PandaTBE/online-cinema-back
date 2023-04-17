@@ -52,13 +52,14 @@ model Movie {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
-    slug           String  @unique
-    poster         String
-    bigPoster      String
-    title          String  @unique
-    rating         Float   @default(5)
+    slug      String @unique
+    title     String @unique
+    poster    String
+    bigPoster String
+    videoUrl  String
+
     numberOfViews  Int     @default(0)
-    videoUrl       String
+    rating         Float   @default(5)
     sendToTelegram Boolean @default(false)
 
     parameters MovieParameters?
