@@ -20,7 +20,7 @@ export class FileService {
                 );
 
                 return {
-                    url: `uploads/${file.originalname}`,
+                    url: `uploads/${folder}/${file.originalname}`,
                     name: file.originalname,
                 };
             }),

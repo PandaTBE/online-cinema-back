@@ -6,7 +6,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FileService } from './file.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 
 @Controller('files')
@@ -15,13 +15,11 @@ export class FileController {
 
     @Auth('admin')
     @Post()
-    @UseInterceptors(FileInterceptor('files'))
+    @UseInterceptors(FilesInterceptor('files'))
     async uploadFiles(
         @UploadedFiles() files: Express.Multer.File[],
         @Query('folder') folder?: string,
     ) {
-        console.log(files, folder);
-
         return this.fileService.uploadFiles(files, folder);
     }
 }
