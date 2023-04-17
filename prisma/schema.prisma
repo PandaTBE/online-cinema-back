@@ -31,6 +31,8 @@ model Genre {
     slug        String @unique
     description String
     icon        String
+
+    movies Movie[]
 }
 
 model Actor {
@@ -41,4 +43,39 @@ model Actor {
     name  String
     slug  String @unique
     photo String
+
+    movies Movie[]
+}
+
+model Movie {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    slug           String  @unique
+    poster         String
+    bigPoster      String
+    title          String  @unique
+    rating         Float   @default(5)
+    numberOfViews  Int     @default(0)
+    videoUrl       String
+    sendToTelegram Boolean @default(false)
+
+    parameters MovieParameters?
+
+    genres Genre[]
+
+    actors Actor[]
+}
+
+model MovieParameters {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    year     Int
+    duration Int
+    country  String
+    movie    Movie  @relation(fields: [movieId], references: [id])
+    movieId  Int    @unique @map("movie_id")
 }
