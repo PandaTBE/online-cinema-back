@@ -18,11 +18,20 @@ export class UserService {
     async getProfile(userId: number): Promise<Omit<User, 'password'>> {
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
-            select: USER_FIELDS,
+            include: {
+                favorites: true,
+            },
+
+            // select: USER_FIELDS,
         });
 
         if (!user) throw new UnauthorizedException('Пользователь не найден');
         return user;
+    }
+
+    async toggleFavorites(movieId: number, user: User) {
+        // const {} = user;
+        return;
     }
 
     async updateProfile(
@@ -64,8 +73,12 @@ export class UserService {
         return updatedUser;
     }
 
+    /** Admin only */
+
     async getUsers() {
-        const users = await this.prisma.user.findMany();
+        const users = await this.prisma.user.findMany({
+            include: { favorites: true },
+        });
         return users;
     }
 

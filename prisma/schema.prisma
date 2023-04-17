@@ -15,11 +15,12 @@ model User {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
-    email     String   @unique
-    password  String
-    isAdmin   Boolean  @default(false) @map("is_admin")
-    roles     String[] @default([])
-    favorites Int[]    @default([])
+    email    String   @unique
+    password String
+    isAdmin  Boolean  @default(false) @map("is_admin")
+    roles    String[] @default([])
+
+    favorites Movie[]
 }
 
 model Genre {
@@ -67,6 +68,8 @@ model Movie {
     genres Genre[]
 
     actors Actor[]
+
+    users User[]
 }
 
 model MovieParameters {

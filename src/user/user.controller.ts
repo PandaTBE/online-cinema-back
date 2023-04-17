@@ -9,12 +9,6 @@ import { AdminUpdateUserDto, UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Auth('admin')
-    @Get()
-    async getUsers() {
-        return this.userService.getUsers();
-    }
-
     @Auth()
     @Get('profile')
     async getProfile(
@@ -30,6 +24,14 @@ export class UserController {
         @Body() dto: UpdateUserDto,
     ): Promise<Omit<UserModel, 'password'>> {
         return this.userService.updateProfile({ user, dto });
+    }
+
+    /** Admin only */
+
+    @Auth('admin')
+    @Get()
+    async getUsers() {
+        return this.userService.getUsers();
     }
 
     @Auth('admin')
