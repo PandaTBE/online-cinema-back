@@ -1,11 +1,22 @@
 version: '3.8'
 services:
 
+  nest:
+    depends_on:
+      - postgres
+    build:
+      context: ./app
+    command: "npm run start"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./persistentdata/uploads:/app/uploads
+
   postgres:
     image: postgres
     restart: always
     env_file:
-      - ./pg_env
+      - ./postgres/.pg_env
     volumes:
       - ./persistentdata/postgres:/var/lib/postgresql/data
     ports:
