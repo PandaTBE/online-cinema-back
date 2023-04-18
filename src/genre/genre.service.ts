@@ -7,10 +7,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from '@prisma/client';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { MovieService } from 'src/movie/movie.service';
+import { ICollection } from './genre.interface';
 
 @Injectable()
 export class GenreService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly movieService: MovieService,
+    ) {}
 
     async getAllGenres(searchTerm?: string) {
         const options = {};
@@ -34,7 +39,6 @@ export class GenreService {
                 },
             ];
         }
-        console.log(options);
 
         const genres = await this.prisma.genre.findMany({
             where: options,
@@ -59,7 +63,21 @@ export class GenreService {
     async getGenreCollections() {
         const genres = await this.prisma.genre.findMany();
 
-        return genres;
+        const collections: ICollection[] = await Promise.all(
+            genres.map(async (genre) => {
+                const movies = await this.movieService.getMoviesByGenreSlug(
+                    genre.slug,
+                );
+                return {
+                    id: genre.id,
+                    slug: genre.slug,
+                    title: genre.name,
+                    image: movies[0]?.bigPoster,
+                };
+            }),
+        );
+
+        return collections;
     }
 
     /** Admin only */
