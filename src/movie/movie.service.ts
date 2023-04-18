@@ -125,6 +125,19 @@ export class MovieService {
         }
     }
 
+    async updateMovieRating(movieId: number, rating) {
+        const movie = await this.prisma.movie.update({
+            where: {
+                id: movieId,
+            },
+            data: {
+                rating,
+            },
+        });
+
+        return movie;
+    }
+
     /** Admin only */
 
     async createMovie(dto: CreateMovieDto) {

@@ -21,6 +21,8 @@ model User {
     roles    String[] @default([])
 
     favorites Movie[]
+
+    ratings Rating[]
 }
 
 model Genre {
@@ -70,6 +72,8 @@ model Movie {
     actors Actor[]
 
     users User[]
+
+    ratings Rating[]
 }
 
 model MovieParameters {
@@ -80,6 +84,23 @@ model MovieParameters {
     year     Int
     duration Int
     country  String
-    movie    Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
-    movieId  Int    @unique @map("movie_id")
+
+    movie   Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+    movieId Int   @unique @map("movie_id")
+}
+
+model Rating {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    rating Float @default(0)
+
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int  @map("user_id")
+
+    movie   Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+    movieId Int   @map("movie_id")
+
+    @@unique([userId, movieId])
 }
