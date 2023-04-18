@@ -6,10 +6,16 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { TelegramService } from 'src/telegram/telegram.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MovieService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly telegramService: TelegramService,
+        private readonly configService: ConfigService,
+    ) {}
 
     private movieIncludeOptions = {
         actors: true,
@@ -149,6 +155,8 @@ export class MovieService {
             throw new BadRequestException('Фильм с таким slug уже есть');
         }
 
+        await this.sendNotifications(dto);
+
         const movie = await this.prisma.movie.create({
             data: {
                 ...dto,
@@ -163,6 +171,7 @@ export class MovieService {
                 parameters: {
                     create: dto.parameters,
                 },
+                sendToTelegram: true,
             },
             include: this.movieIncludeOptions,
         });
@@ -225,5 +234,25 @@ export class MovieService {
                 'При удалении фильма возникла ошибка',
             );
         }
+    }
+
+    /* Utilities */
+    async sendNotifications(dto: CreateMovieDto) {
+        if (this.configService.get('NODE_ENV') !== 'development')
+            await this.telegramService.sendPhoto(dto.poster);
+
+        const msg = `<b>${dto.title}</b>\n\n`;
+        await this.telegramService.sendMessage(msg, {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            url: 'https://okko.tv/movie/free-guy',
+                            text: '🍿 Go to watch',
+                        },
+                    ],
+                ],
+            },
+        });
     }
 }
